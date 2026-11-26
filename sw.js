@@ -1,6 +1,6 @@
 // Guarda la app en el teléfono para que abra sin internet.
 // Red primero: así cada actualización mensual de data.json llega en cuanto hay conexión.
-const VERSION = "inversiones-v3";
+const VERSION = "inversiones-v4";
 const ARCHIVOS = ["./", "./index.html", "./app.css", "./app.js", "./engine.js", "./data.json", "./manifest.webmanifest",
   "./iconos/icono-192.png", "./iconos/icono-512.png", "./iconos/apple-touch-icon.png"];
 
