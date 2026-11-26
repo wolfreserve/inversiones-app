@@ -128,6 +128,9 @@
   }
 
   // ── Portafolio
+  // Verde: el valor está 15% o más por encima del precio. Rojo: 15% o más por debajo. Amarillo: entre −14.99% y +14.99%.
+  const tono = (v, p) => { if (v == null) return ""; const d = v / p - 1; return d >= 0.15 ? "t-verde" : d <= -0.15 ? "t-rojo" : "t-amar"; };
+  const celda = (v, p) => `<div class="c ${tono(v, p)}"><b>${dinero(v)}</b><small>${v == null ? "" : pct(v / p - 1)}</small></div>`;
   function pintarPortafolio() {
     const filas = D.acciones.map((b) => { const s = accion(b.t), r = calc(s); return { s, r, d: r.fv != null ? r.fv / s.price - 1 : null }; });
     const bajo = filas.filter((f) => f.d != null && f.d > 0).length;
@@ -137,9 +140,8 @@
       <div class="lista"><div class="enc"><span>Acción</span><span>Precio</span><span>Valor justo</span><span>Intrínseco</span></div>
       ${filas.map(({ s, r, d }) => `<button class="accion" data-t="${esc(s.t)}"><div><div class="tk">${esc(s.t)}</div><div class="nm">${esc(s.n)}</div></div>
         <div class="c"><b>${dinero(s.price)}</b><small class="tenue">${esc(s.pDate.slice(5).split("-").reverse().join("/"))}</small></div>
-        <div class="c justo"><b>${dinero(r.fv)}</b><small class="${d >= 0 ? "sube" : "baja"}">${d == null ? "" : pct(d)}</small></div>
-        <div class="c"><b>${dinero(r.vi)}</b><small class="${r.vi / s.price - 1 >= 0 ? "sube" : "baja"}">${r.vi == null ? "" : pct(r.vi / s.price - 1)}</small></div></button>`).join("")}</div>
-      <p class="leyenda">El porcentaje indica cuánto sube (verde) o baja (rojo) el precio para llegar a cada valor. Toca una acción para ver sus 13 modelos.</p></div>`;
+        ${celda(r.fv, s.price)}${celda(r.vi, s.price)}</button>`).join("")}</div>
+      <p class="leyenda"><span class="t-verde"><b>Verde</b></span>: el valor está 15% o más por encima del precio (barata). <span class="t-amar"><b>Amarillo</b></span>: a menos de 15%. <span class="t-rojo"><b>Rojo</b></span>: el precio está 15% o más por encima del valor (cara). Toca una acción para ver sus 13 modelos.</p></div>`;
     $$(".accion").forEach((b) => (b.onclick = () => { detalleDe = b.dataset.t; pintar(); }));
   }
 
@@ -161,7 +163,7 @@
       <div class="f">${esc(m.note)}${m.out ? " · Excluido por extremo" : ""}</div><div class="s">${esc(m.src)}</div></div>`).join("");
     $("#app").innerHTML = `<button class="volver" id="volver">‹ Mi portafolio</button>` + cabeza(esc(s.n), `${esc(s.t)} · precio al ${fechaLarga(s.pDate)}${privado.edits[t] ? " · con tus ajustes" : ""}`) + `<div class="contenedor">
       <span class="chip ${c}">${v}${r.fv ? " · " + pct(r.fv / s.price - 1) : ""}</span>
-      <div class="cifras"><div class="p"><span class="etiqueta">Precio</span><b>${dinero(s.price)}</b></div><div class="j"><span class="etiqueta">Valor justo</span><b>${dinero(r.fv)}</b></div><div class="i"><span class="etiqueta">Intrínseco</span><b>${dinero(r.vi)}</b></div></div>
+      <div class="cifras"><div class="p"><span class="etiqueta">Precio</span><b>${dinero(s.price)}</b></div><div class="j ${tono(r.fv, s.price)}"><span class="etiqueta">Valor justo</span><b>${dinero(r.fv)}</b><small>${r.fv == null ? "" : pct(r.fv / s.price - 1)}</small></div><div class="i ${tono(r.vi, s.price)}"><span class="etiqueta">Intrínseco</span><b>${dinero(r.vi)}</b><small>${r.vi == null ? "" : pct(r.vi / s.price - 1)}</small></div></div>
       ${franja(r, s.price)}
       <div class="tarjeta"><div class="etiqueta">Otras referencias</div><p style="margin:6px 0 0">Mediana de los modelos <b class="num">${dinero(r.med)}</b> · Método Alpha Spread <b class="num">${dinero(r.as)}</b> · Objetivo de analistas a 12 meses <b class="num">${dinero(s.target)}</b> <span class="tenue">(no entra en el cálculo)</span></p></div>
       <div class="aviso-caja">${esc(s.flag)}<div class="tenue" style="margin-top:6px">EPS usado: ${esc(s.epsNnote)}. Crecimiento: ${esc(s.gHistNote)}. Próximos resultados: ${esc(s.nextER)}.</div></div>

@@ -50,10 +50,15 @@ button, input, select { font: inherit; color: inherit; }
 .accion:last-child { border-bottom: 0; }
 .accion:active { background: var(--tarjeta-2); }
 .tk { font-weight: 700; font-size: 17px; letter-spacing: .2px; }
-.nm { font-size: 12px; color: var(--tenue); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nm { font-size: 12px; color: var(--texto); opacity: .9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .c b { display: block; font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .c small { font-size: 12px; font-variant-numeric: tabular-nums; }
-.c.justo b { color: var(--oro); }
+.c b, .tk { color: #fff; }
+.t-verde b { color: #9ee6be !important; } .t-verde small { color: #16c45a; font-weight: 700; }
+.t-amar b { color: #f5df8f !important; } .t-amar small { color: #f2b705; font-weight: 700; }
+.t-rojo b { color: #f7aaa5 !important; } .t-rojo small { color: #ff3b30; font-weight: 700; }
+.leyenda .t-verde b { color: #16c45a !important; } .leyenda .t-amar b { color: #f2b705 !important; } .leyenda .t-rojo b { color: #ff3b30 !important; }
+.cifras small { display: block; font-size: 13px; font-variant-numeric: tabular-nums; }
 .leyenda { font-size: 12px; color: var(--tenue); padding: 0 4px; }
 
 /* Tarjetas */
