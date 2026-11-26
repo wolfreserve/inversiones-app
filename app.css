@@ -56,8 +56,8 @@ button, input, select { font: inherit; color: inherit; }
 .c b, .tk { color: #fff; }
 .t-verde b { color: #9ee6be !important; } .t-verde small { color: #16c45a; font-weight: 700; }
 .t-amar b { color: #f5df8f !important; } .t-amar small { color: #f2b705; font-weight: 700; }
-.t-rojo b { color: #ff8a8a !important; } .t-rojo small { color: #ff1f3d; font-weight: 700; }
-.leyenda .t-verde b { color: #16c45a !important; } .leyenda .t-amar b { color: #f2b705 !important; } .leyenda .t-rojo b { color: #ff1f3d !important; }
+.t-rojo b { color: #ff5a6e !important; } .t-rojo small { color: #e8002d; font-weight: 700; }
+.leyenda .t-verde b { color: #16c45a !important; } .leyenda .t-amar b { color: #f2b705 !important; } .leyenda .t-rojo b { color: #e8002d !important; }
 .cifras small { display: block; font-size: 13px; font-variant-numeric: tabular-nums; }
 .leyenda { font-size: 12px; color: var(--tenue); padding: 0 4px; }
 
