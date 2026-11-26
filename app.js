@@ -128,8 +128,8 @@
   }
 
   // ── Portafolio
-  // Verde: el valor está 15% o más por encima del precio. Rojo: 15% o más por debajo. Amarillo: entre −14.99% y +14.99%.
-  const tono = (v, p) => { if (v == null) return ""; const d = v / p - 1; return d >= 0.15 ? "t-verde" : d <= -0.15 ? "t-rojo" : "t-amar"; };
+  // Verde: el valor está 10% o más por encima del precio. Rojo: 10% o más por debajo. Amarillo: entre −9.99% y +9.99%.
+  const tono = (v, p) => { if (v == null) return ""; const d = v / p - 1; return d >= 0.10 ? "t-verde" : d <= -0.10 ? "t-rojo" : "t-amar"; };
   const celda = (v, p) => `<div class="c ${tono(v, p)}"><b>${dinero(v)}</b><small>${v == null ? "" : pct(v / p - 1)}</small></div>`;
   function pintarPortafolio() {
     const filas = D.acciones.map((b) => { const s = accion(b.t), r = calc(s); return { s, r, d: r.fv != null ? r.fv / s.price - 1 : null }; });
@@ -141,7 +141,7 @@
       ${filas.map(({ s, r, d }) => `<button class="accion" data-t="${esc(s.t)}"><div><div class="tk">${esc(s.t)}</div><div class="nm">${esc(s.n)}</div></div>
         <div class="c"><b>${dinero(s.price)}</b><small class="tenue">${esc(s.pDate.slice(5).split("-").reverse().join("/"))}</small></div>
         ${celda(r.fv, s.price)}${celda(r.vi, s.price)}</button>`).join("")}</div>
-      <p class="leyenda"><span class="t-verde"><b>Verde</b></span>: el valor está 15% o más por encima del precio (barata). <span class="t-amar"><b>Amarillo</b></span>: a menos de 15%. <span class="t-rojo"><b>Rojo</b></span>: el precio está 15% o más por encima del valor (cara). Toca una acción para ver sus 13 modelos.</p></div>`;
+      <p class="leyenda"><span class="t-verde"><b>Verde</b></span>: el valor está 10% o más por encima del precio (barata). <span class="t-amar"><b>Amarillo</b></span>: a menos de 10%. <span class="t-rojo"><b>Rojo</b></span>: el precio está 10% o más por encima del valor (cara). Toca una acción para ver sus 13 modelos.</p></div>`;
     $$(".accion").forEach((b) => (b.onclick = () => { detalleDe = b.dataset.t; pintar(); }));
   }
 
