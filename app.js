@@ -20,6 +20,7 @@
 
   // ── Estado
   let llave = null, sal = null, privado = null; // privado = { edits, mkt, excl } descifrado, solo en memoria
+  let vivos = {}, horaVivo = null, relojVivo = null;
   let D = null, vista = "portafolio", detalleDe = null, ocultoDesde = 0, intentos = 0, esperaHasta = 0;
 
   // ── Almacén cifrado (IndexedDB)
@@ -40,7 +41,7 @@
   async function guardarPrivado() { const { iv, ct } = await cifrar(llave, privado); await almacen.guardar("boveda", { v: 1, sal: b64(sal), iv, ct }); }
   async function crearBoveda(codigo) { sal = crypto.getRandomValues(new Uint8Array(16)); llave = await derivarLlave(codigo, sal); privado = vacio(); await guardarPrivado(); }
   async function abrirBoveda(codigo) { const b = await almacen.obtener("boveda"); const s = desdeB64(b.sal); const k = await derivarLlave(codigo, s); privado = await descifrar(k, b.iv, b.ct); sal = s; llave = k; }
-  function bloquear() { llave = null; privado = null; detalleDe = null; pintarBloqueo(); }
+  function bloquear() { clearInterval(relojVivo); vivos = {}; llave = null; privado = null; detalleDe = null; pintarBloqueo(); }
 
   // ── Íconos
   const IC = {
@@ -98,7 +99,25 @@
 
   // ── Datos y cálculos
   const mercado = () => (privado.mkt && privado.mktDe === D.actualizado ? privado.mkt : { ...D.mercado });
-  function accion(t) { const s = JSON.parse(JSON.stringify(D.acciones.find((x) => x.t === t))); Object.assign(s, privado.edits[t] || {}); return s; }
+  function accion(t) {
+    const s = JSON.parse(JSON.stringify(D.acciones.find((x) => x.t === t)));
+    if (vivos[t]) { s.price = vivos[t].c; s.enVivo = vivos[t]; }
+    Object.assign(s, privado.edits[t] || {});
+    if (privado.edits[t]?.price != null) s.enVivo = null;
+    return s;
+  }
+  // ── Precios en vivo (Finnhub, llave gratuita guardada cifrada en este teléfono)
+  async function cargarVivos() {
+    const k = privado?.finnhub; if (!k || !D) return;
+    const res = await Promise.all(D.acciones.map((a) => fetch(`https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(a.t)}&token=${encodeURIComponent(k)}`, { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status))).then((q) => [a.t, q]).catch((e) => [a.t, { error: e }])));
+    let ok = 0;
+    for (const [t, q] of res) if (q && typeof q.c === "number" && q.c > 0) { vivos[t] = { c: q.c, dp: q.dp, ts: q.t }; ok++; }
+    privado.vivoError = ok ? null : "No se pudieron obtener precios en vivo. Revisa tu llave de Finnhub.";
+    if (ok) horaVivo = new Date();
+    if (llave && !document.hidden && (vista === "portafolio" || detalleDe)) { const y = scrollY; pintar(); scrollTo(0, y); }
+  }
+  function iniciarVivos() { clearInterval(relojVivo); if (!privado?.finnhub) return; cargarVivos(); relojVivo = setInterval(() => !document.hidden && llave && cargarVivos(), 60000); }
   const calc = (s) => summarize(s, mercado(), privado.excl);
   function veredicto(fv, p) {
     if (fv == null) return ["Sin datos suficientes", ""];
@@ -111,7 +130,7 @@
   // ── Estructura
   function entrar() {
     if (privado.edits && privado.verDatos !== D.actualizado) { privado.edits = {}; privado.verDatos = D.actualizado; guardarPrivado(); }
-    vista = "portafolio"; detalleDe = null; pintarNav(); pintar();
+    vista = "portafolio"; detalleDe = null; pintarNav(); pintar(); iniciarVivos();
   }
   function pintarNav() {
     $(".nav")?.remove(); const n = document.createElement("nav"); n.className = "nav";
@@ -135,11 +154,11 @@
     const filas = D.acciones.map((b) => { const s = accion(b.t), r = calc(s); return { s, r, d: r.fv != null ? r.fv / s.price - 1 : null }; });
     const bajo = filas.filter((f) => f.d != null && f.d > 0).length;
     const prom = filas.filter((f) => f.d != null).reduce((a, f) => a + f.d, 0) / filas.length;
-    $("#app").innerHTML = cabeza("Mi portafolio", `Valores al ${fechaLarga(D.actualizado)}`) + `<div class="contenedor">
+    $("#app").innerHTML = cabeza("Mi portafolio", horaVivo ? `<span class="punto"></span>Precios en vivo · ${horaVivo.toLocaleTimeString("es", { hour: "numeric", minute: "2-digit" })} · Valores al ${fechaLarga(D.actualizado)}` : `Valores al ${fechaLarga(D.actualizado)}${privado.finnhub ? "" : " · Activa los precios en vivo en Supuestos"}`) + `<div class="contenedor">
       <div class="resumen"><div><b>${filas.length}</b><span>Acciones</span></div><div><b>${bajo}</b><span>Bajo su valor justo</span></div><div><b class="${prom >= 0 ? "sube" : "baja"}">${pct(prom)}</b><span>Potencial promedio</span></div></div>
       <div class="lista"><div class="enc"><span>Acción</span><span>Precio</span><span>Valor justo</span><span>Intrínseco</span></div>
       ${filas.map(({ s, r, d }) => `<button class="accion" data-t="${esc(s.t)}"><div><div class="tk">${esc(s.t)}</div><div class="nm">${esc(s.n)}</div></div>
-        <div class="c"><b>${dinero(s.price)}</b><small class="tenue">${esc(s.pDate.slice(5).split("-").reverse().join("/"))}</small></div>
+        <div class="c"><b>${dinero(s.price)}</b>${s.enVivo ? `<small class="vivo ${s.enVivo.dp >= 0 ? "sube" : "baja"}">${s.enVivo.dp >= 0 ? "+" : ""}${(s.enVivo.dp ?? 0).toFixed(2)}% hoy</small>` : ""}</div>
         ${celda(r.fv, s.price)}${celda(r.vi, s.price)}</button>`).join("")}</div>
       <p class="leyenda"><span class="t-verde"><b>Verde</b></span>: el valor está 10% o más por encima del precio (barata). <span class="t-amar"><b>Amarillo</b></span>: a menos de 10%. <span class="t-rojo"><b>Rojo</b></span>: el precio está 10% o más por encima del valor (cara). Toca una acción para ver sus 13 modelos.</p></div>`;
     $$(".accion").forEach((b) => (b.onclick = () => { detalleDe = b.dataset.t; pintar(); }));
@@ -161,7 +180,7 @@
     const filas = (g) => r.ms.filter((m) => m.grp === g).map((m) => `<div class="modelo"><div class="n">${esc(m.name)}</div>
       <div class="v">${m.val == null ? '<span class="tenue">No aplica</span>' : m.out ? `<span class="tachado">${dinero(m.val)}</span>` : dinero(m.val)}</div>
       <div class="f">${esc(m.note)}${m.out ? " · Excluido por extremo" : ""}</div><div class="s">${esc(m.src)}</div></div>`).join("");
-    $("#app").innerHTML = `<button class="volver" id="volver">‹ Mi portafolio</button>` + cabeza(esc(s.n), `${esc(s.t)} · precio al ${fechaLarga(s.pDate)}${privado.edits[t] ? " · con tus ajustes" : ""}`) + `<div class="contenedor">
+    $("#app").innerHTML = `<button class="volver" id="volver">‹ Mi portafolio</button>` + cabeza(esc(s.n), `${esc(s.t)} · ${s.enVivo ? "precio en vivo" : "precio al " + fechaLarga(s.pDate)}${privado.edits[t] ? " · con tus ajustes" : ""}`) + `<div class="contenedor">
       <span class="chip ${c}">${v}${r.fv ? " · " + pct(r.fv / s.price - 1) : ""}</span>
       <div class="cifras"><div class="p"><span class="etiqueta">Precio</span><b>${dinero(s.price)}</b></div><div class="j ${tono(r.fv, s.price)}"><span class="etiqueta">Valor justo</span><b>${dinero(r.fv)}</b><small>${r.fv == null ? "" : pct(r.fv / s.price - 1)}</small></div><div class="i ${tono(r.vi, s.price)}"><span class="etiqueta">Intrínseco</span><b>${dinero(r.vi)}</b><small>${r.vi == null ? "" : pct(r.vi / s.price - 1)}</small></div></div>
       ${franja(r, s.price)}
@@ -199,6 +218,11 @@
         <p class="tenue">${esc(D.mercado.rf_fuente)}. ${esc(D.mercado.erp_fuente)}. ${esc(D.mercado.tg_fuente)}.</p>
         <label class="interruptor"><span>Excluir resultados extremos (regla de InvestingPro: más de 100% arriba o 60% abajo del precio)</span><input type="checkbox" id="excl" ${privado.excl ? "checked" : ""}></label>
         <button class="btn secundario" id="reset">Volver a los valores originales</button></div>
+      <h2>Precios en vivo</h2><div class="tarjeta">
+        <p class="tenue" style="margin:0 0 8px">Yahoo Finance y Google Finance no permiten que una app personal lea sus precios directamente, así que la app usa <b>Finnhub</b>, que es gratis. Crea una cuenta en finnhub.io, copia tu “API key” del panel y pégala aquí. Se guarda cifrada en este teléfono y los precios se actualizan cada minuto mientras la app está abierta.</p>
+        <label for="fk">Llave de Finnhub (API key)</label><input id="fk" type="password" autocomplete="off" value="${esc(privado.finnhub || "")}">
+        <div class="error" id="errk">${esc(privado.vivoError || "")}</div><button class="btn" id="guardarK">Guardar y conectar</button>
+        ${privado.finnhub ? '<button class="btn secundario" id="quitarK">Desconectar precios en vivo</button>' : ""}</div>
       <h2>Seguridad</h2><div class="tarjeta"><p class="tenue" style="margin:0 0 8px">Tus ajustes se guardan cifrados (AES-256) en este teléfono. La app se bloquea sola después de 2 minutos en segundo plano.</p>
         <label for="ca">Código actual</label><input id="ca" type="password" autocomplete="current-password">
         <label for="cn" style="margin-top:10px">Nuevo código (mínimo 6)</label><input id="cn" type="password" autocomplete="new-password">
@@ -207,6 +231,8 @@
     for (const k of ["rf", "erp", "tg"]) $("#" + k).onchange = async () => { privado.mkt = { ...mercado(), [k]: +$("#" + k).value }; privado.mktDe = D.actualizado; await guardarPrivado(); toast("Guardado"); };
     $("#excl").onchange = async () => { privado.excl = $("#excl").checked; await guardarPrivado(); toast("Guardado"); };
     $("#reset").onclick = async () => { privado.mkt = null; privado.excl = true; privado.edits = {}; await guardarPrivado(); pintar(); toast("Valores originales"); };
+    $("#guardarK").onclick = async () => { privado.finnhub = $("#fk").value.trim() || null; privado.vivoError = null; await guardarPrivado(); vivos = {}; horaVivo = null; toast(privado.finnhub ? "Conectando…" : "Guardado"); iniciarVivos(); setTimeout(() => vista === "supuestos" && pintar(), 2500); };
+    $("#quitarK") && ($("#quitarK").onclick = async () => { privado.finnhub = null; clearInterval(relojVivo); vivos = {}; horaVivo = null; await guardarPrivado(); pintar(); });
     $("#cambiarCod").onclick = async () => {
       const ca = $("#ca").value, cn = $("#cn").value, cr = $("#cr").value;
       if (cn.length < 6) return ($("#err").textContent = "Mínimo 6 caracteres.");
@@ -230,7 +256,7 @@
   }
 
   // ── Arranque
-  document.addEventListener("visibilitychange", () => { if (document.hidden) ocultoDesde = Date.now(); else if (llave && Date.now() - ocultoDesde > BLOQUEO_MS) bloquear(); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) ocultoDesde = Date.now(); else if (llave && Date.now() - ocultoDesde > BLOQUEO_MS) bloquear(); else if (llave) cargarVivos(); });
   fetch("data.json?t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()).then((d) => { D = d; pintarBloqueo(); })
     .catch(() => { $("#app").innerHTML = '<div class="bloqueo"><h1>Inversiones</h1><p class="tenue">No se pudieron cargar los datos. Revisa tu conexión y vuelve a abrir la app.</p></div>'; });
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
