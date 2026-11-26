@@ -1,0 +1,60 @@
+
+/* VOICE: graphics desk of a weekly — sober, exact, the verdict first.
+   IDEA: a printed valuation ledger: one ruled row per stock, each with its own range strip.
+   PICTURE: the range strip — every model as a tick, price as a red needle, intrinsic and fair value as marks.
+   COLOUR and TYPE: white, ink, red needle, slate fair value, pale panels; Source Serif 4 titles, Inter body.
+   LAYOUT: header, ledger of 5 rows, detail sheet per stock, method and update tabs. */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#10191e);--ink:light-dark(#121212,#e8eef1);--mut:light-dark(#5b6470,#9aa9b2);--red:#e3120b;--sl:light-dark(#2e6f8e,#6fb3d4);--pan:light-dark(#e3ecf0,#1a2a32);--rule:light-dark(#d5dde2,#2a3b44);--gr:light-dark(#1d7a45,#55c287)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
+.band{padding:clamp(20px,4vw,48px) max(5vw,16px);max-width:1100px;margin:0 auto}
+h1,h2,h3{font-family:"New York","Iowan Old Style",Georgia,serif;font-weight:600;line-height:1.08;text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,6vw,46px)}h2{font-size:26px;margin:28px 0 10px}h3{font-size:20px}
+.tab{display:inline-block;background:var(--red);color:#fff;font-size:13px;font-weight:600;padding:3px 10px;margin-bottom:12px}
+.lede{color:var(--mut);margin:10px 0 0;max-width:64ch}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin:22px 0 4px;border-bottom:1px solid var(--rule)}
+nav button{font:inherit;font-size:15px;background:none;border:0;border-bottom:3px solid transparent;color:var(--mut);padding:10px 12px;min-height:44px;cursor:pointer}
+nav button[aria-selected=true]{color:var(--ink);border-color:var(--red);font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--sl);outline-offset:2px}
+.row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,2fr);gap:18px;padding:18px 0;border-bottom:1px solid var(--rule);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:left;font:inherit;color:inherit}
+.row:hover{background:linear-gradient(90deg,transparent,var(--pan),transparent)}
+.tk{font-family:"New York","Iowan Old Style",Georgia,serif;font-size:28px;font-weight:600}
+.nm{color:var(--mut);font-size:14px}
+.figs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+.fig b{display:block;font-size:19px;font-variant-numeric:tabular-nums;white-space:nowrap}.fig span{font-size:13px;color:var(--mut)}
+.verd{display:inline-block;font-size:13px;font-weight:600;padding:2px 8px;margin-top:8px;background:var(--pan)}
+.v-up{color:var(--gr)}.v-dn{color:var(--red)}
+.strip{position:relative;height:74px;margin-top:4px}
+.strip .ax{position:absolute;left:0;right:0;top:34px;height:2px;background:var(--rule)}
+.strip i{position:absolute;top:26px;width:2px;height:18px;background:var(--mut);opacity:.55}
+.strip .nd{position:absolute;width:4px;transform:translateX(-50%);top:14px;height:42px}
+.nd.p{background:var(--red);top:6px;height:50px;z-index:2}.nd.f{background:var(--sl)}.nd.v{background:var(--ink);top:20px;height:30px}
+.leg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--mut);margin-top:2px}.leg i{display:inline-block;width:4px;height:12px;margin-right:5px;vertical-align:-1px;background:var(--mut)}
+.leg i.p{background:var(--red)}.leg i.v{background:var(--ink)}.leg i.f{background:var(--sl)}
+.ends{position:absolute;top:52px;font-size:12px;color:var(--mut)}
+.panel{background:var(--pan);padding:16px;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--mut);font-weight:600}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.src{font-size:13px;color:var(--mut)}.note{font-size:13px;color:var(--mut)}
+.x{color:var(--mut);text-decoration:line-through}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+label{font-size:13px;color:var(--mut);display:block}
+input,select{font:inherit;font-size:16px;width:100%;padding:9px 10px;min-height:44px;border:1px solid var(--rule);background:var(--bg);color:var(--ink)}
+.btn{font:inherit;font-size:15px;min-height:44px;padding:8px 16px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer}
+.btn.g{background:none;color:var(--ink)}
+.back{background:none;border:0;font:inherit;color:var(--sl);padding:10px 0;min-height:44px;cursor:pointer}
+.big{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.big div{border-top:3px solid var(--ink);padding-top:6px}.big div.f{border-color:var(--sl)}.big div.p{border-color:var(--red)}
+.big b{display:block;font-family:"New York","Iowan Old Style",Georgia,serif;font-size:clamp(28px,6vw,40px);font-variant-numeric:tabular-nums;white-space:nowrap}
+.chk{display:flex;gap:8px;align-items:center;font-size:15px;color:var(--ink)}.chk input{width:22px;min-height:22px}
+.scroll{overflow-x:auto}
+.ok{color:var(--gr);font-weight:600;text-align:center}.no{color:var(--mut);text-align:center}
+[hidden]{display:none!important}
+@media(max-width:600px){.row{grid-template-columns:minmax(0,1fr)}table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--mut)}.stack td:empty{display:none}}
+@media(prefers-reduced-motion:no-preference){.strip .mk{transition:left .4s}}
+
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.upd{font-size:13px;color:var(--mut);margin-top:6px}

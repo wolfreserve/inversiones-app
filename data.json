@@ -1,0 +1,300 @@
+{
+ "actualizado": "2026-11-25",
+ "mercado": {
+  "rf": 5.05,
+  "rf_fuente": "Bono del Tesoro EE.UU. 10 años, cierre 19-nov-2026 (Dow Jones/Morningstar)",
+  "erp": 4.2,
+  "erp_fuente": "Prima de riesgo implícita de Damodaran, 1-oct-2026",
+  "tg": 3,
+  "tg_fuente": "Crecimiento perpetuo (inflación de largo plazo). GuruFocus usa 4%"
+ },
+ "acciones": [
+  {
+   "t": "META",
+   "n": "Meta Platforms",
+   "price": 560.84,
+   "pDate": "2026-11-20",
+   "shares": 2.56,
+   "rev": 241.61,
+   "epsTTM": 29.33,
+   "epsN": 29.33,
+   "epsNnote": "EPS GAAP últimos 12 meses (a sep-2026)",
+   "epsFwd": 32.95,
+   "fcf": 28.65,
+   "ebitda": 116.19,
+   "cash": 82.45,
+   "debt": 114.84,
+   "bvps": 106.57,
+   "tbvps": 97.37,
+   "beta": 1.28,
+   "div": 2.1,
+   "roe": 32.26,
+   "roic": 34.46,
+   "epsG3": 12.63,
+   "gHist": 14.3,
+   "gHistNote": "EPS 2021→2025",
+   "mPE": 23.7,
+   "mPS": 7.93,
+   "mPB": 7.49,
+   "mPFCF": 24,
+   "target": 848.23,
+   "nextER": "finales de ene-2027",
+   "peers": [
+    {
+     "t": "GOOGL",
+     "fpe": 20.53,
+     "eve": 18.14
+    },
+    {
+     "t": "AMZN",
+     "fpe": 24.96,
+     "eve": 15.56
+    },
+    {
+     "t": "MSFT",
+     "fpe": 23.34,
+     "eve": 17.83
+    }
+   ],
+   "flag": "El gasto de capital en IA (104 mil M en 12 meses) reduce el flujo de caja libre; los modelos por flujo de caja salen bajos por eso."
+  },
+  {
+   "t": "GOOGL",
+   "n": "Alphabet",
+   "price": 282.31,
+   "pDate": "2026-11-23",
+   "shares": 12.29,
+   "rev": 471.1,
+   "epsTTM": 19.15,
+   "epsN": 13.09,
+   "epsNnote": "EPS consenso 2026 (el de 12 meses, 19.15, incluye ganancias no recurrentes por inversiones)",
+   "epsFwd": 13.75,
+   "fcf": 19.75,
+   "ebitda": 185.52,
+   "cash": 265.1,
+   "debt": 150.33,
+   "bvps": 53.65,
+   "tbvps": 48.09,
+   "beta": 1.23,
+   "div": 0.88,
+   "roe": 44.29,
+   "roic": 28.73,
+   "epsG3": 19.66,
+   "gHist": 17.8,
+   "gHistNote": "EPS 2021→2025",
+   "mPE": 23.79,
+   "mPS": 6.64,
+   "mPB": 7.15,
+   "mPFCF": 28.68,
+   "target": 395.77,
+   "nextER": "principios de feb-2027",
+   "peers": [
+    {
+     "t": "META",
+     "fpe": 17.02,
+     "eve": 12.62
+    },
+    {
+     "t": "AMZN",
+     "fpe": 24.96,
+     "eve": 15.56
+    },
+    {
+     "t": "MSFT",
+     "fpe": 23.34,
+     "eve": 17.83
+    }
+   ],
+   "flag": "Gasto de capital de 160 mil M en 12 meses: el flujo de caja libre (19.7 mil M) está muy por debajo de su nivel normal."
+  },
+  {
+   "t": "ORCL",
+   "n": "Oracle",
+   "price": 116.1,
+   "pDate": "2026-11-06",
+   "shares": 3.12,
+   "rev": 71.78,
+   "epsTTM": 6.38,
+   "epsN": 6.38,
+   "epsNnote": "EPS GAAP últimos 12 meses (a ago-2026)",
+   "epsFwd": 8.54,
+   "fcf": -28.72,
+   "ebitda": 34.43,
+   "cash": 37.08,
+   "debt": 169.14,
+   "bvps": 20.44,
+   "tbvps": 0,
+   "beta": 1.78,
+   "div": 2,
+   "roe": 41.19,
+   "roic": 11.34,
+   "epsG3": 28.08,
+   "gHist": 24.7,
+   "gHistNote": "EPS año fiscal 2022→2026",
+   "mPE": 33.64,
+   "mPS": 6.08,
+   "mPB": null,
+   "mPFCF": null,
+   "target": 235.77,
+   "nextER": "mediados de dic-2026",
+   "peers": [
+    {
+     "t": "MSFT",
+     "fpe": 23.34,
+     "eve": 17.83
+    },
+    {
+     "t": "AMZN",
+     "fpe": 24.96,
+     "eve": 15.56
+    },
+    {
+     "t": "CRM",
+     "fpe": 12.32,
+     "eve": 13.93
+    }
+   ],
+   "flag": "Flujo de caja libre negativo (−28.7 mil M) por la construcción de centros de datos y deuda alta (169 mil M). El DCF de flujo de caja no aplica."
+  },
+  {
+   "t": "GRAB",
+   "n": "Grab Holdings",
+   "price": 2.81,
+   "pDate": "2026-11-23",
+   "shares": 4.04,
+   "rev": 3.97,
+   "epsTTM": 0.1,
+   "epsN": 0.1,
+   "epsNnote": "EPS GAAP últimos 12 meses",
+   "epsFwd": 0.1396,
+   "fcf": 0.025,
+   "ebitda": 0.446,
+   "cash": 5.9,
+   "debt": 2.07,
+   "bvps": 1.67,
+   "tbvps": 1.124,
+   "beta": 0.83,
+   "div": 0,
+   "roe": 7.64,
+   "roic": 8.9,
+   "epsG3": 45.09,
+   "gHist": null,
+   "gHistNote": "Sin historial de ganancias positivas: se usa el consenso a 3 años",
+   "mPE": null,
+   "mPS": 6.8,
+   "mPB": 2.99,
+   "mPFCF": null,
+   "target": 5.39,
+   "nextER": "finales de feb-2027",
+   "peers": [
+    {
+     "t": "UBER",
+     "fpe": 15.35,
+     "eve": 17.07
+    },
+    {
+     "t": "DASH",
+     "fpe": 24.78,
+     "eve": 42.16
+    },
+    {
+     "t": "LYFT",
+     "fpe": 7.84,
+     "eve": null
+    }
+   ],
+   "flag": "Recién empieza a ganar dinero: el P/S histórico viene de años de hipercrecimiento y los modelos de ganancias son sensibles a un EPS muy pequeño."
+  },
+  {
+   "t": "UBER",
+   "n": "Uber",
+   "price": 63.47,
+   "pDate": "2026-11-20",
+   "shares": 2.04,
+   "rev": 56.53,
+   "epsTTM": 1.68,
+   "epsN": 3.36,
+   "epsNnote": "EPS consenso 2026 (el de 12 meses, 1.68, incluye pérdidas por revalorización de inversiones)",
+   "epsFwd": 4.135,
+   "fcf": 10.42,
+   "ebitda": 7.83,
+   "cash": 13.69,
+   "debt": 17.74,
+   "bvps": 13.56,
+   "tbvps": 7.69,
+   "beta": 1.31,
+   "div": 0,
+   "roe": 12.33,
+   "roic": 14.93,
+   "epsG3": 31.34,
+   "gHist": null,
+   "gHistNote": "Historial distorsionado por beneficios fiscales: se usa el consenso a 3 años",
+   "mPE": 16.89,
+   "mPS": 3.26,
+   "mPB": 5.8,
+   "mPFCF": 28.06,
+   "target": 98.16,
+   "nextER": "principios de feb-2027",
+   "peers": [
+    {
+     "t": "GRAB",
+     "fpe": 20.13,
+     "eve": 16.85
+    },
+    {
+     "t": "DASH",
+     "fpe": 24.78,
+     "eve": 42.16
+    },
+    {
+     "t": "LYFT",
+     "fpe": 7.84,
+     "eve": null
+    }
+   ],
+   "flag": "El P/E histórico está distorsionado por beneficios fiscales de 2024–2025."
+  }
+ ],
+ "historial": [
+  {
+   "fecha": "2026-11-25",
+   "t": "META",
+   "precio": 560.84,
+   "vi": 410.15,
+   "fv": 545.51,
+   "motivo": "Primer cálculo con los últimos resultados trimestrales"
+  },
+  {
+   "fecha": "2026-11-25",
+   "t": "GOOGL",
+   "precio": 282.31,
+   "vi": 242.47,
+   "fv": 271.76,
+   "motivo": "Primer cálculo con los últimos resultados trimestrales"
+  },
+  {
+   "fecha": "2026-11-25",
+   "t": "ORCL",
+   "precio": 116.1,
+   "vi": 93.54,
+   "fv": 131.66,
+   "motivo": "Primer cálculo con los últimos resultados trimestrales"
+  },
+  {
+   "fecha": "2026-11-25",
+   "t": "GRAB",
+   "precio": 2.81,
+   "vi": 2.53,
+   "fv": 2.94,
+   "motivo": "Primer cálculo con los últimos resultados trimestrales"
+  },
+  {
+   "fecha": "2026-11-25",
+   "t": "UBER",
+   "precio": 63.47,
+   "vi": 55.51,
+   "fv": 70.95,
+   "motivo": "Primer cálculo con los últimos resultados trimestrales"
+  }
+ ]
+}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#10191e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Inversiones">
+<title>Inversiones</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">
+<link rel="icon" href="iconos/icono-192.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="band">
+  <div class="tab">Mi portafolio</div>
+  <h1 id="title">Valor intrínseco y valor justo</h1>
+  <p class="lede" id="lede">Cargando datos…</p>
+  <nav role="tablist">
+    <button role="tab" data-v="cartera" aria-selected="true">Acciones</button>
+    <button role="tab" data-v="metodo" aria-selected="false">Cómo se calcula</button>
+    <button role="tab" data-v="ajustes" aria-selected="false">Supuestos</button>
+    <button role="tab" data-v="historial" aria-selected="false">Historial</button>
+  </nav>
+
+  <section id="v-cartera"><div id="ledger"></div>
+    <p class="note">Toca una acción para ver el resultado de cada modelo y ajustar los números.</p></section>
+
+  <section id="v-detalle" hidden></section>
+
+  <section id="v-metodo" hidden>
+    <h2>Dos cifras, dos preguntas</h2>
+    <p><b>Valor intrínseco</b>: lo que vale el negocio solo por lo que gana y produce en efectivo, sin mirar cómo cotizan otras acciones. Es el promedio de los modelos absolutos (los DCF, EPV, Graham y dividendos). Morningstar llama a esto su “fair value estimate”.</p>
+    <p><b>Valor justo</b>: el promedio simple de todos los modelos que aplican, absolutos y relativos (múltiplos históricos y de competidores), como hacen InvestingPro (promedio de hasta 17 modelos) y Alpha Spread (DCF + valoración relativa).</p>
+    <p>Reglas tomadas de las plataformas: un modelo se omite si no aplica (por ejemplo, flujo de caja negativo o dividendo pequeño) y, como en InvestingPro, se excluyen los resultados extremos, más de 100% por encima o 60% por debajo del precio. Puedes reactivarlos en Supuestos. Veredicto según Simply Wall St: 20% bajo el valor = infravalorada, 40% = muy infravalorada.</p>
+    <h2>Parámetros que comparten las plataformas</h2>
+    <p class="note">✓ = documentado públicamente por la plataforma. — = no lo publican, aunque puede usarlo. M Morningstar · G GuruFocus · I InvestingPro · S Simply Wall St · A Alpha Spread.</p>
+    <div class="scroll"><table id="params"></table></div>
+    <h2>Los 13 modelos de la app</h2>
+    <div id="mlist"></div>
+  </section>
+
+  <section id="v-ajustes" hidden>
+    <h2>Supuestos de mercado</h2>
+    <div class="grid">
+      <div><label for="rf">Tasa libre de riesgo %</label><input id="rf" type="number" step="0.01" inputmode="decimal"></div>
+      <div><label for="erp">Prima de riesgo %</label><input id="erp" type="number" step="0.01" inputmode="decimal"></div>
+      <div><label for="tg">Crecimiento perpetuo %</label><input id="tg" type="number" step="0.1" inputmode="decimal"></div>
+    </div>
+    <p class="note" id="mktsrc"></p>
+    <p><label class="chk"><input type="checkbox" id="excl"> Excluir resultados extremos (regla de InvestingPro)</label></p>
+    <button class="btn g" id="resetAll">Volver a los datos originales</button>
+  </section>
+
+  <section id="v-historial" hidden>
+    <h2>Cómo ha cambiado el valor</h2>
+    <p>Cada mes, unos días después de que reportan resultados, actualizo todos los números: precio, ganancias, flujo de caja, deuda, estimados de analistas, tasas y competidores. Así lo hacen Morningstar (revisa tras cada reporte o noticia material), GuruFocus y Simply Wall St (recalculan con cada dato nuevo). Cada actualización queda registrada aquí.</p>
+    <div class="scroll"><table class="stack" id="hist"></table></div>
+    <h3 style="margin-top:22px">Próximos resultados</h3>
+    <div id="next"></div>
+  </section>
+</div>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
