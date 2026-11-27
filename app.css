@@ -13,6 +13,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; min-width: 0; -webkit-tap-highlight-color: transparent; }
+html, body, button, input, label, a { touch-action: manipulation; }
 html, body { margin: 0; background: var(--fondo); color: var(--texto); }
 body {
   font: 16px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
@@ -133,7 +134,7 @@ p { margin: 8px 4px; }
 .bloqueo input { text-align: center; font-size: 24px; letter-spacing: 6px; margin-top: 14px; }
 .error { color: var(--rojo); min-height: 22px; font-size: 14px; margin-top: 8px; }
 .teclado { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
-.tecla { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 14px; font-size: 24px; padding: 14px 0; min-height: 58px; cursor: pointer; }
+.tecla { -webkit-user-select: none; user-select: none; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 14px; font-size: 24px; padding: 14px 0; min-height: 58px; cursor: pointer; }
 .tecla:active { background: var(--tarjeta-2); }
 .tecla.tenue { font-size: 18px; color: var(--tenue); }
 .nota { font-size: 13px; color: var(--tenue); background: var(--tarjeta); border-radius: 12px; padding: 12px; margin: 12px 0; text-align: left; }
