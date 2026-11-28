@@ -1,0 +1,47 @@
+name: Foto del mercado
+
+on:
+  schedule:
+    - cron: "*/15 13-21 * * 1-5"   # cada 15 min en horario de bolsa (UTC)
+    - cron: "17 9 * * 6"           # sábados: lista del S&P 500 y buscador
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "precios o semanal"
+        default: "precios"
+  push:
+    paths: ["scripts/mercado.py", ".github/workflows/mercado.yml"]
+
+concurrency:
+  group: mercado
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  foto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Elegir modo
+        id: modo
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "m=${{ github.event.inputs.modo }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.schedule }}" = "17 9 * * 6" ] || [ ! -f sp500.json ]; then echo "m=semanal" >> $GITHUB_OUTPUT
+          else echo "m=precios" >> $GITHUB_OUTPUT; fi
+      - name: Descargar datos
+        env:
+          FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
+        run: |
+          python3 scripts/mercado.py ${{ steps.modo.outputs.m }}
+          if [ "${{ steps.modo.outputs.m }}" = "semanal" ]; then python3 scripts/mercado.py precios; fi
+      - name: Guardar
+        run: |
+          git config user.name "Foto del mercado"
+          git config user.email "actions@users.noreply.github.com"
+          git add mercado.json sp500.json simbolos.json 2>/dev/null || true
+          git diff --cached --quiet && exit 0
+          git commit -m "Foto del mercado $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin main && break; sleep 5; done
