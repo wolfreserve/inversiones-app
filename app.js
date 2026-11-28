@@ -126,7 +126,10 @@
   }
   const api = (ruta, q) => fetch(`https://finnhub.io/api/v1/${ruta}?${new URLSearchParams({ ...q, token: privado.finnhub })}`, { cache: "no-store" }).then((r) => (r.ok ? r.json() : Promise.reject(r.status)));
   const cotizar = (t) => api("quote", { symbol: t });
-  const top10 = () => (M ? M.acciones.filter((a) => a.mc).sort((a, b) => b.mc - a.mc).slice(0, 10) : []);
+  // Empresas con dos clases de acciones en el S&P 500: Finnhub da el total de acciones de la empresa en ambas,
+  // así que se muestra solo una clase para no contar la empresa dos veces.
+  const DUPLICADAS = new Set(["GOOG", "FOX", "NWS"]);
+  const top10 = () => (M ? M.acciones.filter((a) => a.mc && !DUPLICADAS.has(a.t)).sort((a, b) => b.mc - a.mc).slice(0, 10) : []);
   const precioDe = (t) => vivos[t] || (M && M.acciones.find((a) => a.t === t)) || null;
   function iniciarVivos() { clearInterval(relojVivo); if (!privado?.finnhub) return; cargarVivos(); relojVivo = setInterval(() => !document.hidden && llave && cargarVivos(), 60000); }
   const calc = (s) => summarize(s, mercado(), privado.excl);
@@ -195,7 +198,7 @@
   function dibujarMapa() {
     const caja = $("#mapa"); if (!caja || !M) return;
     const W = caja.clientWidth, H = caja.clientHeight, porSector = {};
-    for (const a of M.acciones) if (a.mc) { const p = precioDe(a.t); (porSector[a.s] = porSector[a.s] || []).push({ t: a.t, v: a.mc, dp: p?.dp ?? a.dp }); }
+    for (const a of M.acciones) if (a.mc && !DUPLICADAS.has(a.t)) { const p = precioDe(a.t); (porSector[a.s] = porSector[a.s] || []).push({ t: a.t, v: a.mc, dp: p?.dp ?? a.dp }); }
     const sectores = Object.entries(porSector).map(([s, xs]) => ({ s, xs: xs.sort((a, b) => b.v - a.v), v: xs.reduce((a, b) => a + b.v, 0) })).sort((a, b) => b.v - a.v);
     let html = "";
     for (const sec of squarify(sectores, 0, 0, W, H)) {
